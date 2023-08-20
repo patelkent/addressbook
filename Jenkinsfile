@@ -42,7 +42,7 @@ pipeline {
                 // }
                 
     // some block
-
+                agent any
                   steps {      
                     script {
                         sshagent(['build-server']) {
