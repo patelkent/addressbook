@@ -34,16 +34,20 @@ pipeline {
             
             }
             stage('package') {
-                agent {label 'slave1'}
+                //agent {label 'slave1'}
                 // when{
                 //     expression{
                 //         BRANCH_NAME = 'dev' || BRANCH_NAME = 'developk'
                 //     }
                 // }
+                sshagent(['build-server']) {
+    // some block
+
                   steps {        
                     sh "mvn package"
                     echo "deploying app version: ${params.APPVERSION}"
-            }            
+                     }            
+                }
             }
             stage('Deploy'){
                 agent {label 'slave1'}
