@@ -32,16 +32,27 @@ pipeline {
             
             }
             stage('package') {
-                when{
-                    expression{
-                        BRANCH_NAME = 'dev' || BRANCH_NAME = 'developk'
-                    }
-                }
+                // when{
+                //     expression{
+                //         BRANCH_NAME = 'dev' || BRANCH_NAME = 'developk'
+                //     }
+                // }
                   steps {        
                     sh "mvn package"
                     echo "deploying app version: ${params.APPVERSION}"
+            }            
             }
-            
+            stage('Deploy'){
+                steps{
+                    input{
+                        message:'Please approve the deployment'
+                        ok "yes, to deploy"
+                        parameters{
+                            choice{name:'APPVERSION', choice['1.2','1.3','1.4']}
+                        }
+                    }
+                    echo "Deploying to Test"
+                }
             }
         }
     }
