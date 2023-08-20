@@ -5,6 +5,9 @@ pipeline {
         // Install the Maven version configured as "M3" and add it to the path.
         maven "mymaven"
     }
+    environment{
+        BUILD_SERVER_IP='ec2-user@172.31.46.107'
+    }
   parameters {
         string(name: 'Env', defaultValue: 'Test', description: 'Env to Deploy')
         booleanParam(name: 'executeTests', defaultValue: true, description: 'Decide to run TC')
@@ -46,8 +49,10 @@ pipeline {
                   steps {      
                     script {
                         sshagent(['build-server']) {
-                            sh "mvn package"
-                            echo "deploying app version: ${params.APPVERSION}"
+                            echo "packaging the code on new slave2"
+                            sh "scp -o StrictHostKeyChecking=no server-config.sh ${BUILD_SERVER_IP}:/home/ec2-user"
+                            sh "ssh ${BUILD_SERVER_IP} 'bash ~/server-config.sh'"
+                            //echo "deploying app version: ${params.APPVERSION}"
                     }  
                     
                      }            
