@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
@@ -8,11 +8,12 @@ pipeline {
   parameters {
         string(name: 'Env', defaultValue: 'Test', description: 'Env to Deploy')
         booleanParam(name: 'executeTests', defaultValue: true, description: 'Decide to run TC')
-        choice(name: 'APPVERSION', choices: ['1.1', '1.2', '1.3'], description: 'Pick something')
+        choice(name: 'APPVERSION', choices: ['1.1', '1.2', '1.3','1.4'], description: 'Pick something')
     }
 
     stages {
         stage('Compile') {
+            agent any
             steps {
                 git 'https://github.com/patelkent/addressbook.git'
                 sh "mvn compile"
@@ -21,6 +22,7 @@ pipeline {
             
             }
             stage('UnitTest') {
+                agent any
                 when{
                     expression{
                         params.executeTests==true
@@ -32,6 +34,7 @@ pipeline {
             
             }
             stage('package') {
+                agent {label 'slave1'}
                 // when{
                 //     expression{
                 //         BRANCH_NAME = 'dev' || BRANCH_NAME = 'developk'
@@ -43,6 +46,7 @@ pipeline {
             }            
             }
             stage('Deploy'){
+                agent {lable 'slave1'}
                 steps{
                     input{
                         message:'Please approve the deployment'
