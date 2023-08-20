@@ -32,9 +32,14 @@ pipeline {
             
             }
             stage('package') {
+                when{
+                    expression{
+                        BRANCH_NAME = 'dev' || BRANCH_NAME = 'develop'
+                    }
+                }
                   steps {        
-                sh "mvn package"
-                echo "deploying app version: ${params.APPVERSION}"
+                    sh "mvn package"
+                    echo "deploying app version: ${params.APPVERSION}"
             }
             
             }
