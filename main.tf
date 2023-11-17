@@ -13,12 +13,17 @@ provider "aws" {
 #   #secret_key = ""
 }
 variable "instance_type" {}
+# locals {
+#   env = "${terraform.workspace}"
+# }
 resource "aws_instance" "web" {
   count = 2
   ami           = "ami-0a6ed6689998f32a5"
   instance_type = var.instance_type
 
   tags = {
-    Name = "TF-${count.index+1}"
+    # Name = "TF-${count.index+1}"
+    # Name = "${local.env}-${count.index+1}"
+    Name = "${terraform.workspace}-${count.index+1}"
   }
 }
