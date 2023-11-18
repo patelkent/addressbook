@@ -18,7 +18,7 @@ provider "aws" {
 #   #access_key = ""
 #   #secret_key = ""
 }
-variable "instance_type" {}
+# variable "instance_type" {}
 # locals {
 #   env = "${terraform.workspace}"
 # }
@@ -32,3 +32,10 @@ variable "instance_type" {}
 #     Name = "TF-${terraform.workspace}-${count.index+1}"
 #   }
 # }
+# Creating AWS VPC
+resource "aws_vpc" "TFVPC" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "TF-VPC"
+  }
+}
